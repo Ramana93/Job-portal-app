@@ -36,18 +36,5 @@ This project demonstrates backend development, database management, authenticati
 - SQLite (default Django database)
 - Django ORM for database operations
 
----
-Job-portal-app/
-│
-├── jobportal/ # Main project folder
-├── app_name/ # Django app folder
-├── templates/ # HTML templates
-├── static/ # CSS & static files
-├── manage.py
-├── requirements.txt
-└── README.md
-
-
-
 
 ## 📂 Project Structure
