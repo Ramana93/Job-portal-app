@@ -1,0 +1,38 @@
+{% extends 'base.html' %} {% block content %}
+
+<div class="form-page">
+  <div class="form-container">
+    <h2>Post Job</h2>
+
+    <form method="POST">
+      {% csrf_token %}
+
+      <input type="text" name="title" placeholder="Job Title" required />
+      <input type="text" name="company" placeholder="Company Name" required />
+      <input type="text" name="location" placeholder="Location" required />
+      <input
+        type="text"
+        name="salary"
+        placeholder="Salary (e.g. 3-5 LPA)"
+        required
+      />
+      <input
+        type="text"
+        name="experience"
+        placeholder="Experience (e.g. 2 Years)"
+        required
+      />
+
+      <textarea
+        name="description"
+        placeholder="Job Description"
+        rows="4"
+        required
+      ></textarea>
+
+      <button type="submit">Post Job</button>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

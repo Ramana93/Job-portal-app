@@ -1,0 +1,399 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #f4f6f9;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* Navbar */
+nav {
+  background: linear-gradient(to right, #667eea, #764ba2);
+  padding: 15px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+nav h1 {
+  margin: 0;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #333;
+  margin-left: 20px;
+  font-weight: bold;
+}
+
+.nav-links a:hover {
+  color: white;
+}
+
+/* Center Container */
+.container {
+  height: calc(100vh - 80px); /* minus navbar height */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Form Box */
+.form-container {
+  width: 380px;
+  padding: 30px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.2);
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+.form-container h2 {
+  margin-bottom: 20px;
+}
+
+input,
+textarea {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #5a67d8;
+}
+
+.form-description {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 15px;
+}
+
+.password-info {
+  font-size: 12px;
+  color: #777;
+  display: block;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.checkbox-area {
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  margin: 10px 0;
+}
+
+.checkbox-area input {
+  width: auto;
+  margin-right: 8px;
+}
+
+/* Home container */
+.home-container {
+  padding: 40px;
+}
+
+/* Heading top left */
+.job-heading {
+  margin-top: 20px;
+}
+
+/* Center message */
+.no-jobs {
+  height: 60vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  color: #555;
+}
+
+/* Job cards */
+.job-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding: 20px 0;
+}
+
+.job-card {
+  background: white;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  transition: 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Hover effect */
+.job-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+.job-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 6px;
+  width: 100%;
+  background: linear-gradient(to right, #6a11cb, #2575fc);
+}
+
+.job-card p {
+  font-size: 14px;
+  margin: 4px 0;
+  color: #555;
+}
+
+/* Show only 4 lines */
+.job-description {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: 14px;
+}
+
+/* When expanded */
+.job-description.expanded {
+  -webkit-line-clamp: unset;
+  line-clamp: unset;
+  overflow: visible;
+}
+
+.view-btn {
+  margin-top: 10px;
+  width: 100%;
+  padding: 8px;
+  border-radius: 8px;
+  border: none;
+  background: linear-gradient(to right, #6a11cb, #2575fc);
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.view-btn:hover {
+  opacity: 0.9;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .job-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .job-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+.job-card h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.job-buttons {
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 12px;
+}
+
+.apply-container {
+  width: 400px;
+  margin: 60px auto;
+  text-align: center;
+}
+
+.apply-title {
+  margin-bottom: 30px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.apply-container input,
+.apply-container textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.apply-container button {
+  width: 100%;
+  padding: 10px;
+  background-color: #5c6bc0;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.apply-container button:hover {
+  background-color: #3f51b5;
+}
+
+/* Alert Messages */
+.alert {
+  width: 400px;
+  margin: 20px auto;
+  padding: 12px;
+  text-align: center;
+  border-radius: 6px;
+  font-weight: bold;
+  color: white;
+}
+
+/* Success - Green */
+.alert.success {
+  background-color: #4caf50;
+}
+
+/* Error - Red */
+.alert.error {
+  background-color: #f44336;
+}
+
+.form-container.switch-text a {
+  margin-top: 15px;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+/* ===== Common Button Style ===== */
+.btn {
+  padding: 8px 15px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  display: inline-block;
+  transition: 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+/* ===== Apply Button ===== */
+.apply-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.apply-btn:hover {
+  background-color: #218838;
+}
+
+/* ===== Delete Button ===== */
+.delete-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.delete-btn:hover {
+  background-color: #c82333;
+}
+
+/* ===== Login Button ===== */
+.login-btn {
+  background-color: #007bff;
+  color: white;
+}
+
+.login-btn:hover {
+  background-color: #0056b3;
+}
+
+/* ===== Register Button ===== */
+.register-btn {
+  background-color: #6f42c1;
+  color: white;
+}
+
+.register-btn:hover {
+  background-color: #5a32a3;
+}
+
+/* ===== Common Button Style ===== */
+.btn {
+  padding: 8px 15px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  display: inline-block;
+  transition: 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+/* ===== Apply Button ===== */
+.apply-btn {
+  background-color: #28a745;
+  color: white;
+  margin-top: 10px;
+}
+
+.apply-btn:hover {
+  background-color: #218838;
+}
+
+/* ===== Delete Button ===== */
+.delete-btn {
+  background-color: #dc3545;
+  color: white;
+  margin-top: 10px;
+}
+
+.delete-btn:hover {
+  background-color: #c82333;
+}
+
+/* ===== Login Button ===== */
+.login-btn {
+  background-color: #007bff;
+  color: white;
+  margin-top: 10px;
+}
+
+.login-btn:hover {
+  background-color: #0056b3;
+}
+
+/* ===== Register Button ===== */
+.register-btn {
+  background-color: #6f42c1;
+  color: white;
+  margin-top: 10px;
+}
+
+.register-btn:hover {
+  background-color: #5a32a3;
+}

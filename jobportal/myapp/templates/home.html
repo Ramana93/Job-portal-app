@@ -1,0 +1,43 @@
+{% extends 'base.html' %} {% block content %}
+
+<div class="home-container">
+  <!-- Top Left Heading -->
+  <h2 class="job-heading">Available Jobs</h2>
+
+  {% if jobs %}
+  <div class="job-list">
+    {% for job in jobs %}
+    <div class="job-card">
+      <h3>{{ job.title }}</h3>
+      <p><strong>Company:</strong> {{ job.company }}</p>
+      <p><strong>Location:</strong> {{ job.location }}</p>
+      <p><strong>Salary:</strong> {{ job.salary }}</p>
+      <p><strong>Experience:</strong> {{ job.experience }}</p>
+      <hr />
+      <p class="job-description" id="desc-{{ job.pk }}">
+        {{ job.description }}
+      </p>
+
+      <button class="view-btn" onclick="toggleDescription('{{ job.pk }}')">
+        View More
+      </button>
+
+      <div class="job-buttons">
+        <a href="{% url 'apply_job' job.pk %}" class="btn apply-btn">Apply</a>
+        <a href="{% url 'delete_job' job.pk %}" class="btn delete-btn"
+          >Delete</a
+        >
+        <a href="{% url 'edit_job' job.pk %}" class="btn login-btn">Edit</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+
+  <div class="no-jobs">
+    <h3>No jobs available yet</h3>
+  </div>
+  {% endif %}
+</div>
+
+{% endblock %}
