@@ -1,4 +1,7 @@
-{% extends 'base.html' %} {% block content %}
+{% extends 'base.html' %} 
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
 
 <div class="form-container">
   <h2>Create Account</h2>
@@ -16,9 +19,17 @@
 
     <input type="password" name="password" placeholder="Password" required />
 
-    <small class="password-info">
-      Password must be at least 8 characters long.
-    </small>
+
+    <!-- ⭐ NEW ROLE SELECTION -->
+
+    <label class="role-label">Select Role</label>
+
+    <select name="role" class="role-select" required>
+      <option value="seeker">Job Seeker</option>
+      <option value="recruiter">Recruiter</option>
+    </select>
+
+    <!-- ⭐ END ROLE -->
 
     <div class="checkbox-area">
       <input type="checkbox" required />

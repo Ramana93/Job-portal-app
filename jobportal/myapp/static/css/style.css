@@ -397,3 +397,35 @@ button:hover {
 .register-btn:hover {
   background-color: #5a32a3;
 }
+
+.role-label{
+margin-top:10px;
+font-weight:600;
+display:block;
+color:chocolate;
+}
+
+.role-select{
+width:100%;
+padding:10px;
+margin-top:5px;
+margin-bottom:15px;
+border-radius:6px;
+border:1px solid #ccc;
+}
+
+.user-role {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  margin-right: 15px;
+  display: inline-block;
+}
+
+.user-role strong {
+  color: #ffd369;
+  font-weight: 600;
+}

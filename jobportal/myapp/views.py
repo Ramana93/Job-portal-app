@@ -4,27 +4,34 @@ from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
-from . models import Job, Application
+from . models import Job, Application, Profile 
 
 
 def home(request):
     jobs = Job.objects.all()
     return render(request, 'home.html', {'jobs': jobs})
 
-
-
 def register_view(request):
+
     if request.method == "POST":
         username = request.POST.get('username')
         password = request.POST.get('password')
+        role = request.POST.get('role')
 
         # Check if username already exists
         if User.objects.filter(username=username).exists():
             messages.error(request, "Username already exists! Please try another.")
             return redirect('register')
 
-        # Create new user
-        User.objects.create_user(username=username, password=password)
+        # Create user
+        user = User.objects.create_user(username=username, password=password)
+
+        # Create profile with role
+        Profile.objects.create(
+            user=user,
+            role=role
+        )
+
         messages.success(request, "Account created successfully! Please login.")
         return redirect('login')
 
@@ -56,7 +63,11 @@ def logout_user(request):
 
 
 @login_required
+
 def post_job(request):
+    if request.user.profile.role != "recruiter":
+        messages.error(request, "Only Recruiters can post jobs.")
+        return redirect("home")
     if request.method == "POST":
         title = request.POST['title']
         company = request.POST['company']
@@ -82,6 +93,10 @@ def post_job(request):
 
 @login_required
 def apply_job(request,pk):
+    if request.user.profile.role != "seeker":
+        messages.error(request, "Only Job Seekers can apply for jobs.")
+        return redirect("home")
+    
     job = Job.objects.get(pk=pk)
     job = get_object_or_404(Job, id=pk)
 
@@ -107,26 +122,36 @@ def apply_job(request,pk):
     return render(request, 'apply_job.html', {'job': job})
 
 @login_required
-def delete_job(request, job_pk):
-    job = Job.objects.get(pk=job_pk)
+def delete_job(request, pk):
+    if request.user.profile.role != "recruiter":
+        messages.error(request, "Access Denied! Only recruiters can delete jobs.")
+        return redirect("home")
+
+    job = Job.objects.get(pk=pk)
     job.delete()
+
     messages.success(request, "Job deleted successfully!")
-    return redirect('home')
+    return redirect("home")
 
 @login_required
 def edit_job(request, pk):
-    job = get_object_or_404(Job, pk=pk)
+    if request.user.profile.role != "recruiter":
+        messages.error(request, "Access Denied! Only recruiters can update jobs.")
+        return redirect("home")
+
+    job = Job.objects.get(pk=pk)
 
     if request.method == "POST":
-        job.title = request.POST.get('title')
-        job.company = request.POST.get('company')
-        job.location = request.POST.get('location')
-        job.salary = request.POST.get('salary')
-        job.experience = request.POST.get('experience')
-        job.description = request.POST.get('description')
+        job.title = request.POST.get("title")
+        job.company = request.POST.get("company")
+        job.location = request.POST.get("location")
+        job.salary = request.POST.get("salary")
+        job.experience = request.POST.get("experience")
+        job.description = request.POST.get("description")
+
         job.save()
 
         messages.success(request, "Job updated successfully!")
-        return redirect('home')
+        return redirect("home")
 
-    return render(request, 'edit_job.html', {'job': job})
+    return render(request, "edit_job.html", {"job": job})

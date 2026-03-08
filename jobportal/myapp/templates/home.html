@@ -23,11 +23,14 @@
       </button>
 
       <div class="job-buttons">
+        {% if user.profile.role == "seeker" %}
         <a href="{% url 'apply_job' job.pk %}" class="btn apply-btn">Apply</a>
+        {% endif %} {% if user.profile.role == "recruiter" %}
+        <a href="{% url 'edit_job' job.pk %}" class="btn login-btn">Edit</a>
         <a href="{% url 'delete_job' job.pk %}" class="btn delete-btn"
           >Delete</a
         >
-        <a href="{% url 'edit_job' job.pk %}" class="btn login-btn">Edit</a>
+        {% endif %}
       </div>
     </div>
     {% endfor %}
