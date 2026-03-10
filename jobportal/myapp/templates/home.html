@@ -1,10 +1,39 @@
 {% extends 'base.html' %} {% block content %}
 
 <div class="home-container">
-  <!-- Top Left Heading -->
   <h2 class="job-heading">Available Jobs</h2>
 
-  {% if jobs %}
+  <!-- FILTER FORM (only for seekers) -->
+  {% if user.profile.role == "seeker" %}
+  <form method="GET" class="filter-form">
+    <input
+      type="text"
+      name="title"
+      placeholder="Job Title"
+      value="{{ request.GET.title }}"
+    />
+    <input
+      type="text"
+      name="location"
+      placeholder="Location"
+      value="{{ request.GET.location }}"
+    />
+    <input
+      type="text"
+      name="experience"
+      placeholder="Experience"
+      value="{{ request.GET.experience }}"
+    />
+    <input
+      type="text"
+      name="salary"
+      placeholder="Salary Range"
+      value="{{ request.GET.salary }}"
+    />
+    <button type="submit" class="filter-btn">Filter</button>
+    <a href="{% url 'home' %}" class="clear-btn">Clear</a>
+  </form>
+  {% endif %} {% if jobs %}
   <div class="job-list">
     {% for job in jobs %}
     <div class="job-card">
@@ -14,33 +43,82 @@
       <p><strong>Salary:</strong> {{ job.salary }}</p>
       <p><strong>Experience:</strong> {{ job.experience }}</p>
       <hr />
+
+      <!-- JOB DESCRIPTION -->
       <p class="job-description" id="desc-{{ job.pk }}">
         {{ job.description }}
       </p>
 
-      <button class="view-btn" onclick="toggleDescription('{{ job.pk }}')">
+      <button
+        class="view-btn"
+        onclick="toggleDescription('{{ job.pk }}', this)"
+      >
         View More
       </button>
 
       <div class="job-buttons">
-        {% if user.profile.role == "seeker" %}
+        <!-- Seeker -->
+        {% if user.profile.role == "seeker" %} {% if job.user_application %}
+        <span class="applied-status {{ job.user_application.status }}">
+          {{ job.user_application.status|capfirst }}
+        </span>
+        {% else %}
         <a href="{% url 'apply_job' job.pk %}" class="btn apply-btn">Apply</a>
-        {% endif %} {% if user.profile.role == "recruiter" %}
-        <a href="{% url 'edit_job' job.pk %}" class="btn login-btn">Edit</a>
-        <a href="{% url 'delete_job' job.pk %}" class="btn delete-btn"
-          >Delete</a
-        >
+        {% endif %} {% endif %}
+
+        <!-- HR -->
+        {% if user.profile.role == "recruiter" %}
+        <div class="job-actions">
+          <p class="app-count">
+            <strong>Applicants:</strong> {{ job.application_set.count }}
+          </p>
+          <div class="action-buttons">
+            <a href="{% url 'view_applicants' job.pk %}" class="btn view-btn"
+              >View Applications</a
+            >
+            <a href="{% url 'edit_job' job.pk %}" class="btn edit-btn">Edit</a>
+            <a href="{% url 'delete_job' job.pk %}" class="btn delete-btn"
+              >Delete</a
+            >
+          </div>
+        </div>
         {% endif %}
       </div>
     </div>
     {% endfor %}
   </div>
-  {% else %}
 
+  <!-- PAGINATION -->
+  <div class="pagination">
+    {% if jobs.has_previous %}
+    <a href="?page={{ jobs.previous_page_number }}">Previous</a>
+    {% endif %}
+    <span> Page {{ jobs.number }} of {{ jobs.paginator.num_pages }} </span>
+    {% if jobs.has_next %}
+    <a href="?page={{ jobs.next_page_number }}">Next</a>
+    {% endif %}
+  </div>
+
+  {% else %}
   <div class="no-jobs">
     <h3>No jobs available yet</h3>
   </div>
   {% endif %}
 </div>
+
+<!-- JS for View More / View Less -->
+<script>
+  function toggleDescription(jobId, button) {
+    const desc = document.getElementById("desc-" + jobId);
+
+    desc.classList.toggle("expanded");
+
+    if (desc.classList.contains("expanded")) {
+      button.innerText = "View Less";
+    } else {
+      button.innerText = "View More";
+    }
+  }
+</script>
 
 {% endblock %}

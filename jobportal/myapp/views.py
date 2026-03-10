@@ -5,11 +5,48 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from . models import Job, Application, Profile 
+from django.core.paginator import Paginator
 
+
+from django.core.paginator import Paginator
 
 def home(request):
-    jobs = Job.objects.all()
-    return render(request, 'home.html', {'jobs': jobs})
+    jobs = Job.objects.all().order_by('-id')
+
+    # FILTERS
+    title = request.GET.get('title')
+    location = request.GET.get('location')
+    experience = request.GET.get('experience')
+    salary = request.GET.get('salary')
+
+    if title:
+        jobs = jobs.filter(title__icontains=title)
+
+    if location:
+        jobs = jobs.filter(location__icontains=location)
+
+    if experience:
+        jobs = jobs.filter(experience__icontains=experience)
+
+    if salary:
+        jobs = jobs.filter(salary__icontains=salary)
+
+    # Attach application status for seeker
+    if request.user.is_authenticated and request.user.profile.role == 'seeker':
+        applications = Application.objects.filter(applicant=request.user)
+        apps_dict = {app.job_id: app for app in applications}
+
+        for job in jobs:
+            job.user_application = apps_dict.get(job.id)
+
+    # PAGINATION
+    paginator = Paginator(jobs, 3)
+    page_number = request.GET.get("page")
+    jobs_page = paginator.get_page(page_number)
+
+    return render(request, "home.html", {
+        "jobs": jobs_page
+    })
 
 def register_view(request):
 
@@ -155,3 +192,34 @@ def edit_job(request, pk):
         return redirect("home")
 
     return render(request, "edit_job.html", {"job": job})
+
+def update_status(request, pk, status):
+
+    application = Application.objects.get(pk=pk)
+    application.status = status
+    application.save()
+
+    return redirect('view_applicants', pk=application.job.pk)
+
+@login_required
+def view_applicants(request, pk):
+    job = get_object_or_404(Job, pk=pk)
+
+    if request.user.profile.role != "recruiter":
+        messages.error(request, "Access Denied!")
+        return redirect("home")
+
+    applicants = job.application_set.all()  # all applicants for this job
+
+    # Handle status update
+    if request.method == "POST":
+        app_id = request.POST.get("application_id")
+        new_status = request.POST.get("status")
+        application = get_object_or_404(Application, pk=app_id)
+        if new_status in ['waiting', 'selected', 'rejected']:
+            application.status = new_status
+            application.save()
+            messages.success(request, f"{application.name}'s status updated to {new_status.capitalize()}")
+        return redirect('view_applicants', pk=pk)
+
+    return render(request, "view_applicants.html", {"job": job, "applicants": applicants})

@@ -1,4 +1,5 @@
-{% extends 'base.html' %} {% block content %}
+{% extends 'base.html' %}
+{% block content %}
 
 <div class="apply-container">
   <h2 class="apply-title">Apply for {{ job.title }}</h2>
@@ -6,17 +7,16 @@
   <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
 
-    <input type="text" name="name" placeholder="Full Name" required />
-    <input type="email" name="email" placeholder="Email" required />
-    <input type="text" name="phone" placeholder="Phone Number" required />
+    <input type="text" name="name" placeholder="Full Name" required>
 
-    <textarea
-      name="cover_letter"
-      placeholder="Cover Letter"
-      required
-    ></textarea>
+    <input type="email" name="email" placeholder="Email" required>
 
-    <input type="file" name="resume" required />
+    <input type="text" name="phone" placeholder="Phone Number" required>
+
+    <textarea name="cover_letter" placeholder="Cover Letter" required></textarea>
+
+    <!-- Resume Upload -->
+    <input type="file" name="resume" accept=".pdf,.doc,.docx" required>
 
     <button type="submit">Submit Application</button>
   </form>

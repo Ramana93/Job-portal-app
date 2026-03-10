@@ -1,0 +1,174 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+
+<div class="applicants-container">
+  <h2 class="applicants-title">Applicants for {{ job.title }}</h2>
+
+  {% if applicants %}
+
+  <table class="applicants-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Resume</th>
+        <th>Cover Letter</th>
+
+        {% if user.profile.role == "recruiter" %}
+        <th>Status</th>
+        {% elif user.profile.role == "seeker" %}
+        <th>Application Status</th>
+        {% endif %}
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for app in applicants %}
+
+      <tr>
+        <td>{{ app.name }}</td>
+
+        <td>{{ app.email }}</td>
+
+        <td>{{ app.phone }}</td>
+
+        <td>
+          {% if app.resume %}
+          <a href="{{ app.resume.url }}" target="_blank" class="resume-btn"
+            >View Resume</a
+          >
+          {% else %} - {% endif %}
+        </td>
+
+        <td>
+          <span class="cover-preview">
+            {{ app.cover_letter|truncatewords:15 }}
+          </span>
+
+          <button
+            onclick="showCover('{{ app.cover_letter|escapejs }}')"
+            class="cover-btn"
+          >
+            View
+          </button>
+        </td>
+
+        {% if user.profile.role == "recruiter" %}
+
+        <td class="status-cell">
+          <!-- Current Status Badge -->
+
+          <span class="status-badge {{ app.status }}">
+            {{ app.status|capfirst }}
+          </span>
+
+          <!-- Status Action Buttons -->
+
+          <div class="status-actions">
+            <form
+              method="POST"
+              action="{% url 'update_status' app.pk 'selected' %}"
+            >
+              {% csrf_token %}
+              <button type="submit" class="action-btn select-btn">
+                Select
+              </button>
+            </form>
+
+            <form
+              method="POST"
+              action="{% url 'update_status' app.pk 'rejected' %}"
+            >
+              {% csrf_token %}
+              <button type="submit" class="action-btn reject-btn">
+                Reject
+              </button>
+            </form>
+
+            <form
+              method="POST"
+              action="{% url 'update_status' app.pk 'waiting' %}"
+            >
+              {% csrf_token %}
+              <button type="submit" class="action-btn wait-btn">Waiting</button>
+            </form>
+          </div>
+        </td>
+
+        {% elif user.profile.role == "seeker" %}
+
+        <td>
+          <span class="status {{ app.status }}">
+            {{ app.status|capfirst }}
+          </span>
+        </td>
+
+        {% endif %}
+      </tr>
+
+      {% endfor %}
+    </tbody>
+  </table>
+
+  {% else %}
+
+  <div class="no-applicants">
+    <h3>No applicants yet.</h3>
+  </div>
+
+  {% endif %}
+</div>
+
+<div id="resumeModal" class="resume-modal">
+  <div class="resume-content">
+    <span class="close-btn" onclick="closeResume()">×</span>
+
+    <!-- Resume PDF will load here -->
+    <iframe
+      id="resumeFrame"
+      src=""
+      width="100%"
+      height="600px"
+      style="border: none"
+    ></iframe>
+  </div>
+</div>
+
+<div id="coverModal" class="cover-modal">
+  <div class="cover-content">
+    <span onclick="closeCover()" class="close-btn">×</span>
+    <p id="coverText"></p>
+  </div>
+</div>
+
+<script>
+  function openResume(url) {
+    const frame = document.getElementById("resumeFrame");
+    const modal = document.getElementById("resumeModal");
+
+    frame.src = "";
+    frame.src = url;
+
+    modal.style.display = "flex";
+  }
+
+  function closeResume() {
+    const frame = document.getElementById("resumeFrame");
+    const modal = document.getElementById("resumeModal");
+
+    frame.src = "";
+    modal.style.display = "none";
+  }
+
+function showCover(text){
+  const modal = document.getElementById("coverModal");
+  document.getElementById("coverText").innerText = text;
+  modal.style.display = "flex";   // use flex to center
+}
+
+function closeCover(){
+  document.getElementById("coverModal").style.display = "none";
+}
+</script>
+
+{% endblock %}
